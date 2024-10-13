@@ -1,0 +1,15 @@
+curl "https://era.graalonline.com/idbfs/33b28fcee7db5511f69dba35d2c3830a/files/creationtime.dat=1728616085.70900011" ^
+  -H "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7" ^
+  -H "accept-language: pt-BR,pt;q=0.9" ^
+  -H "cache-control: max-age=0" ^
+  -H "cookie: /idbfs/33b28fcee7db5511f69dba35d2c3830a/files/creationtime.dat=admin" ^
+  -H "priority: u=0, i" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"129^\^", ^\^"Not=A?Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"129^\^"^" ^
+  -H "sec-ch-ua-mobile: ?1" ^
+  -H ^"sec-ch-ua-platform: ^\^"Android^\^"^" ^
+  -H "sec-fetch-dest: document" ^
+  -H "sec-fetch-mode: navigate" ^
+  -H "sec-fetch-site: none" ^
+  -H "sec-fetch-user: ?1" ^
+  -H "upgrade-insecure-requests: 1" ^
+  -H "user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36"

@@ -1,0 +1,810 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"//www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>GraalOnline Era</title>
+
+    <link type="text/css" rel="stylesheet" href="css/site.css?v=32" />
+    <link type="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  </head>
+  <body class="background" style="overflow-y: hidden; overflow-x: visible;">
+
+    <script>
+      function checkIDNetAutoLogin() {
+      }
+    </script>
+
+<script type="text/javascript">
+
+function getFlashMovieObject(movieName) {
+  if (window.document[movieName])
+    return window.document[movieName];
+  if (navigator.appName.indexOf("Microsoft Internet")==-1) {
+    if (document.embeds && document.embeds[movieName])
+      return document.embeds[movieName];
+  }
+  return document.getElementById(movieName);
+}
+
+//fbonly
+function fireEvent(obj,evt){
+  var fireOnThis = obj;
+  if (document.createEvent) {
+    var evObj = document.createEvent('MouseEvents');
+    evObj.initEvent(evt, true, true);
+    fireOnThis.dispatchEvent(evObj);
+  } else if (document.createEventObject) {
+    fireOnThis.fireEvent('on'+evt);
+  }
+}
+
+function showGameControl(doshow) {
+/*
+  if (doshow)
+    fireEvent(document.getElementById('link_game'),'click');
+  else
+    fireEvent(document.getElementById('link_invitefriends'),'click');
+*/
+  var flashObject = getFlashMovieObject("qplay");
+//  flashObject.style.visibility = (doshow? "visible" : "hidden");
+ // flashObject.className = (doshow? "" : "hide");
+}
+
+//fbonly
+function onBoughtGralatsLocalCurrency(data) {
+  showGameControl(true);
+  if (!data)
+    return;
+
+  //var flashObject = getFlashMovieObject("qplay");
+     { //flashObject && flashObject.onJavascriptEvent) {
+
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptParam', JSON.stringify(data));
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptEvent', 'onBoughtGralatsLocalCurrency');
+        //flashObject.onJavascriptEvent("onBoughtGralatsLocalCurrency",JSON.stringify(data));
+    }
+}
+
+//fbonly
+function buyGralatsByCredits(itemid) {
+    showGameControl(false);
+
+    var obj = {
+        method: 'pay',
+        order_info: {
+            "item_id": itemid
+        },
+        purchase_type: 'item'
+    };
+
+    FB.ui(obj, onBoughtGralats);
+}
+
+//fbonly
+function onBoughtGralats() {
+    showGameControl(true);
+}
+
+//fbonly
+function refillCredits() {
+    showGameControl(false);
+
+    var obj = {
+        method: 'pay',
+        credits_purchase: true
+    };
+
+    FB.ui(obj, onRefilledCredits);
+}
+
+//fbonly
+function onRefilledCredits() {
+    showGameControl(true);
+}
+
+function onCreditsOfferWalls() {
+  showGameControl(true);
+}
+
+function requestPublishRight() {
+  showGameControl(false);
+
+  var obj = {
+    method: 'permissions.request',
+    perms: 'publish_stream,status_update'
+  };
+
+  FB.ui(obj, onRightsCallback);
+}
+
+//fbonly
+function onRightsCallback(response) {
+    showGameControl(true);
+
+    var res = (response.perms != null ? "1" : "0");
+    //var flashObject = getFlashMovieObject("qplay");
+
+    if (true) { //if (flashObject && flashObject.onJavascriptEvent)
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptParam', res);
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptEvent', 'onRightsCallback');
+        //flashObject.onJavascriptEvent("onRightsCallback",res);
+    }
+}
+
+//fbonly
+function requestEmailRight() {
+    showGameControl(false);
+
+    var obj = {
+        method: 'permissions.request',
+        perms: 'email,user_birthday,user_location'
+    };
+
+    FB.ui(obj, onEmailRightsCallback);
+}
+
+//fbonly
+function onEmailRightsCallback(response) {
+    showGameControl(true);
+
+    var res = (response.perms != null ? "1" : "0");
+    //var flashObject = getFlashMovieObject("qplay");
+    if (true) { //  if (flashObject && flashObject.onJavascriptEvent)
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptParam', res);
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptEvent', 'onEmailRightsCallback');
+        //flashObject.onJavascriptEvent("onEmailRightsCallback",res);
+    }
+}
+
+//fbonly
+function requestRight(right) {
+    showGameControl(false);
+
+    var obj = {
+        method: 'permissions.request',
+        perms: right
+    };
+
+    var cb = function (response) {
+        showGameControl(true);
+
+        var res = (response.perms != null ? "1" : "0");
+        //var flashObject = getFlashMovieObject("qplay");
+        if (true) { //flashObject && flashObject.onJavascriptEvent)
+            unityInstance.SendMessage('ParamsFromOutside', 'JavascriptParam', '' + res + ',"' + right + '"');
+            unityInstance.SendMessage('ParamsFromOutside', 'JavascriptEvent', 'onAnyRightsCallback');
+            //flashObject.onJavascriptEvent("onAnyRightsCallback", ''+res+',"'+right+'"');
+        }
+    };
+
+    FB.ui(obj, cb);
+}
+
+//fbonly
+function onFriendsCallback(response) {
+    showGameControl(true);
+
+    var res = (response && response.to ? "" + response.to.toString() : "");
+    //var flashObject = getFlashMovieObject("qplay");
+    if (true) { //flashObject && flashObject.onJavascriptEvent)
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptParam', res);
+        unityInstance.SendMessage('ParamsFromOutside', 'JavascriptEvent', 'onFriendsCallback');
+        //flashObject.onJavascriptEvent("onFriendsCallback",res);
+    }
+}
+
+//fbonly
+if ("airasia" == "facebook") {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "//s-assets.tp-cdn.com/static3/js/api/payment_overlay.js";
+    document.getElementsByTagName("body")[0].appendChild(script);
+}
+
+//fbonly
+function onTrialpayClose() {
+    showGameControl(true);
+}
+
+function resizeFlash(w,h) {
+  var tabs = getFlashMovieObject("tabs");
+  tabs.style.width = '' + w + 'px';
+
+  var flashObject = getFlashMovieObject("qplay");
+  flashObject.style.width = '' + w + 'px';
+  flashObject.style.height = '' + h + 'px';
+}
+
+function resizeFlashToGame() {
+  enlargeGame(0);
+}
+function onGameStarted() {
+  showGameTabs();
+  enlargeGame(0);
+  sendPartnerName();
+}
+
+function sendPartnerName() {
+
+unityInstance.SendMessage('ParamsFromOutside','JavascriptParam',"airasia");
+unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','onPartnerName');
+
+}
+
+///////////////GAMERELATED
+//fbonly
+function clickLinkById(linkid) {
+  if (linkid=='link_getgralats') {
+    window.open('http://www.superrewards-offers.com/super/offers?h=iqrhqyposek.443170600004&uid=', 'newWindow');
+  } else
+    fireEvent(document.getElementById(linkid),'click');
+}
+
+function openSuperRewards(account) {
+	 if ("airasia" == "facebook") {
+  window.open('http://www.superrewards-offers.com/super/offers?h=iqrhqyposek.443170600004&uid='+encodeURIComponent(account), 'newWindow');
+	} else {
+  window.open('http://www.superrewards-offers.com/super/offers?h=iqrhqyposek.443170600004&uid='+encodeURIComponent(account), 'newWindow');
+
+   }
+}
+
+ 
+function buyGralatsLocalCurrency(itemid, requestid) {
+  showGameControl(false);
+
+   var obj = {
+    method: 'pay',
+    action: 'purchaseitem',
+    product: 'https://eraiframecloud.quattroplay.com/og/' + itemid + '.html',
+    request_id: requestid
+  };
+
+
+  FB.ui(obj, onBoughtGralatsLocalCurrency);
+}
+
+
+
+function openCreditsOfferWalls() {
+  showGameControl(false);
+
+  var obj = {
+    method: 'pay',
+    action: 'earn_currency',
+    product: 'http://eraiframecloud.quattroplay.com/og/offerwallobject.php'
+  };
+
+  FB.ui(obj, onCreditsOfferWalls);
+}
+
+function openShare() {
+  var obj = {
+    method: 'feed',
+    name: 'GraalOnline Era',
+    link: 'http://apps.facebook.com/graalera/',
+    picture: 'http://www.graalonline.com/graalicon_big.png',    caption: 'MMORPG in retro look',
+    description: 'Come playing Graal! Explore worlds, chat with friends',
+    message: ''
+  };
+
+  FB.ui(obj, null);
+}
+
+function inviteFriendsByScript() {
+  showGameControl(false);
+
+  var obj = {
+    method: 'apprequests',
+    filters: ['app_non_users'],
+    title: 'Suggest GraalOnline Era to your friends',
+    message: 'Come play Graal! Explore worlds, chat with friends!'
+  };
+
+  FB.ui(obj, onFriendsCallback);
+}
+
+
+
+//fbonly
+function showTrialpayOfferwallFB(account) {
+
+}
+
+function onCannotConnect(error) {
+//  alert("Connection Error");
+  var msg = (error? error : "The game server could not be reached.");
+
+  var flashObject = getFlashMovieObject("qplay");
+  flashObject.style.display = "none";
+
+  var mySpan = document.createElement("span");
+  mySpan.innerHTML = "<br><br><center><font size=4><b>" + msg + "</b></font>" +
+    "<br><a href=\"#\" onclick=\"top.location.href='//olwest.graalonline.com/';\">" +
+    "Reconnect</a>" +
+    "</center>";
+  flashObject.parentNode.replaceChild(mySpan, flashObject);
+}
+
+
+</script>
+
+<div id="tabs">
+  <div class="clearfix">
+    <div style="float: right; padding-right: 10px;">
+      <ul class="fb-tabitems clearfix">
+        <li class="selected" id="game1" style="display:block; margin-left:5px;"><a id="linkgame1" onclick="switchGame(1);">GraalOnline Classic</a></li>
+        <li  id="game2" style="display:block; margin-left:5px;"><a id="linkgame2" onclick="switchGame(2);">GraalOnline Era</a></li>
+        <li class="selected" id="game3" style="display:block; margin-left:5px;"><a id="linkgame3" onclick="switchGame(3);">GraalOnline Zone</a></li>
+        <li class="selected" id="game4" style="display:block; margin-left:5px;"><a id="linkgame4" onclick="switchGame(4);">GraalOnline Olwest</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="contentAfterCrossPromoBar">
+    <div id="gameMenu" class="fb-tabs">
+      <div class="left_tabs">
+        <ul class="fb-tabitems clearfix" id="menu">
+          <li class="selected" id="tabli5" style="display:none; margin-left:5px;"><a id="enlarge1" onclick="enlargeGame(1);">-</a></li>
+          <li class="selected" id="tabli6" style="display:none; margin-left:3px;"><a id="enlarge2" onclick="enlargeGame(2);">+</a></li>
+
+          <li class="selected" id="tabshop" style="display:none; margin-left:7px;"><a id="linkshop" onclick="showShop();">Shop</a></li>
+          <li class="selected" id="tabmap" style="display:none; margin-left:3px;"><a id="linkrules" onclick="showMap();">Map</a></li>
+          <li class="selected" id="tabnews" style="display:none; margin-left:3px;"><a id="linknews" onclick="showNews();">News</a></li>
+          <li class="selected" id="tabfeedback" style="display:none; margin-left:3px;"><a id="linkfeedback" onclick="showFeedback();">Feedback</a></li>
+        </ul>
+      </div>
+      <div id="like_box" style="width:180px;">
+        <div class="fb-like" data-href="http://www.facebook.com/graalonlineera" data-send="false" data-width="660" data-show-faces="false" data-layout="button_count"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" language="javascript">
+
+function getFlashMovieObject(movieName) {
+  if (window.document[movieName])
+    return window.document[movieName];
+  if (navigator.appName.indexOf("Microsoft Internet")==-1) {
+    if (document.embeds && document.embeds[movieName])
+      return document.embeds[movieName];
+  }
+  return document.getElementById(movieName);
+}
+
+   function switchGame(gamenum) {
+	  
+	 partnername =  "airasia";
+	  
+	  if (partnername =="facebook") {
+		  
+		 switch (gamenum) {
+			case 1: {
+				top.location.href = "//apps.facebook.com/graalclassic/";
+				break;
+			}
+			case 2: {
+				top.location.href = "//apps.facebook.com/graalera/";
+				break;
+			}
+			case 3: {
+				top.location.href = "//apps.facebook.com/graalzone/";
+				break;
+			}
+			case 4: {
+				top.location.href = "//apps.facebook.com/graalolwest/";
+				break;
+			}
+		}
+		  
+	  } else {
+		  
+		  switch (gamenum) {
+      case 1: {
+          top.location.href = "//classic.graalonline.com/";
+          break;
+        }
+      case 2: {
+          top.location.href = "//era.graalonline.com/";
+          break;
+        }
+      case 3: {
+          top.location.href = "//zone.graalonline.com/";
+          break;
+        }
+      case 4: {
+          top.location.href = "//olwest.graalonline.com/";
+          break;
+        }
+    }
+		  
+	  }
+	  
+    
+  }
+
+  function enlargeGame(tabnum) {
+
+    var minwidth = 760;
+    var minheight = 592;
+    var newwidth = getFlashMovieObject("unityContainer").style.width.replace(/px/,'')*1;
+	
+	
+	
+	 //alert("newwidth=" + newwidth);
+	
+    if (newwidth < minwidth)
+      newwidth = minwidth;
+
+    switch (tabnum) {
+      case 1: {
+          newwidth -= 120;
+          break;
+        }
+      case 2: {
+          newwidth += 120;
+          break;
+        }
+    }
+
+    if (newwidth < minwidth)
+      newwidth = minwidth;
+    var maxwidth = document.body.offsetWidth;
+  
+    if (newwidth > maxwidth)
+      newwidth = maxwidth;
+
+//    var newheight = newwidth * 592 / 760;
+    var newheight = minheight;
+    if (newwidth > minwidth)
+      newheight += (newwidth - minwidth) * 1/2.4;
+    newheight = limitHeightToBrowser(newheight);
+    if (newheight < minheight)
+      newheight = minheight;
+
+
+//unityInstance.SendMessage('ParamsFromOutside','onResize',newwidth + 'x' + newheight);
+
+getFlashMovieObject("unityContainer").style.width = '' + newwidth + 'px';
+getFlashMovieObject("unityContainer").style.height = '' + newheight + 'px';
+getFlashMovieObject("unity-canvas").style.width = '' + newwidth + 'px';
+getFlashMovieObject("unity-canvas").style.height = '' + newheight + 'px';
+
+	var tabs = getFlashMovieObject("tabs");
+	tabs.style.width = '' + newwidth + 'px';
+
+
+    var tab = getFlashMovieObject("tabli5");
+    tab.style.display = "block";
+    tab.className = (newwidth > minwidth? "selected" : "");
+    tab = getFlashMovieObject("tabli6");
+    tab.style.display = "block";
+    tab.className = (newwidth < maxwidth? "selected" : "");
+  }
+
+  function limitHeightToBrowser(height) {
+    if ( typeof( window.innerHeight ) != 'number' )
+      return height;
+
+//    var maxheight = window.innerHeight - 85 - 60;
+    var maxheight = window.innerHeight - 85;
+    if (height > maxheight)
+      height = maxheight;
+    return height;
+  }
+
+  function showGameTabs() {
+    enlargeGame(0);
+	
+    tab = getFlashMovieObject("tabshop");
+    tab.style.display = "block";
+    var tab = getFlashMovieObject("tabmap");
+    tab.style.display = "block";
+    tab = getFlashMovieObject("tabnews");
+    tab.style.display = "block";
+    tab = getFlashMovieObject("tabfeedback");
+    tab.style.display = "block";
+  }
+  function showShop() {
+    unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','onShowShop');
+  }
+  function showMap() {
+    unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','onShowMap');
+  }
+  function showNews() {
+    unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','onShowNews');
+  }
+  function showFeedback() {
+    unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','onShowFeedback');
+  }
+</script>
+
+<div id="fb-root"></div>
+<script>
+  // This is needed for the like-button
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=261854743829400";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<script src="game/howler/howler.js"></script>
+	<script src="audio.js"></script>
+	<script src="game/TemplateData/UnityProgress.js"></script>
+	<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+	<script type="text/javascript">
+		hotkeys('ctrl+s,ctrl+f,ctrl+w,ctrl+e,ctrl+r,ctrl+t,ctrl+u,ctrl+o,ctrl+p,ctrl+d,ctrl+g,ctrl+h,ctrl+j,ctrl+k,ctrl+z,ctrl+n', function(event, handler){
+			if (hotkeys.ctrl) {	event.preventDefault()	}
+}		);
+
+	</script>
+	
+	<style>
+        #outer-div {
+        width: 100%; 
+        text-align: center;
+        }
+        #unityContainer {
+		width: 760px; height: 592px;
+        display: inline-block; 
+        margin: 10 auto;
+        background-color: #888
+        display: none
+        }
+		#fullscreen {
+        display: inline-block; 
+        margin: 0 auto;
+        background-color: #888
+        }
+		
+.loadingtext {
+		position: absolute;
+		top: -300px;
+		left: 0px;
+		overflow: hidden;
+		  margin: 0;
+		  color: red;
+		}
+
+
+		 div#loadingBox {
+  width: 100%;
+  height: 20px;
+  position: relative;
+  top: 5%;
+  margin-top: -10px;
+  text-align: center;
+}
+div#bgBar {
+  position: relative;
+  width: 200px;
+  margin-left: -100px;
+  left: 50%;
+  height: 2px;
+  display: block;
+  background-color: #333;
+}
+div#progressBar {
+  left: 50%;
+  position: relative;
+  margin-left: -100px;
+  width: 0px;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+}
+    </style>
+  </head>
+	
+	<body>
+   <div id ="outer-div" width="100%">
+   <div id="temp" style="width:760px; height:22px; "></div>
+   <center>
+    <div class="webgl-content">
+    	<div id="imageContainer" style="width: 760px; height: 592px" >
+
+ <img id="foreground2" src="unityloadingscreen.jpg"  style="width: 100%; height: 100% "    >
+<div id="loadingBox">
+  					<div id="bgBar"></div>
+  					<div id="progressBar"></div>
+					</div>
+
+	   
+	   </div>
+      <div id="unityContainer" style="width: 760px; height: 592px"><canvas id="unity-canvas"style="width: 760px; height: 592px"></canvas></div>
+       </center>
+   </div>
+   <div>
+    <script>
+	
+		//getFlashMovieObject('unityContainer').style.display = 'none';
+			//getFlashMovieObject('imageContainer').style.display = 'block';
+
+	var unitystarted = "false";
+	
+	var canvas = document.querySelector("#unity-canvas");
+	document.cookie = 'game=era; expires=Fri, 19 Jun 2099 20:47:11 UTC; path=/';
+    
+	  
+	var buildUrl = "game/Build-share";
+  // var buildUrl = "game/Build";
+     var loaderUrl = buildUrl + "/Worlds.loader.js";
+     var config = {
+	 
+		devicePixelRatio : 1,// window.devicePixelRatio,
+	  dataUrl: buildUrl + "/Worlds.data.unityweb",
+        frameworkUrl: buildUrl + "/Worlds.framework.js.unityweb",
+        codeUrl: buildUrl + "/Worlds.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "toonslab",
+        productName: "Graal Delteria",
+        productVersion: "0",
+      };
+	  
+	  
+
+		var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => { //alert(0);
+	  config['webglContextAttributes'] = {"preserveDrawingBuffer": false}; // Add this line to the index.html file in a WebGL Template
+
+
+        createUnityInstance(canvas, config, (progress) => {         //alert(progress); 
+
+
+var length = 200 * Math.min(progress, 1);
+    bar = document.getElementById("progressBar")
+    bar.style.width = length + "px";
+
+ if (progress == 1) {;
+      document.getElementById("bgBar").style.display = "none";
+      document.getElementById("progressBar").style.display = "none";
+    } 
+
+
+
+
+        	
+		})
+		.then((unityInstance2) => {    
+				unityInstance = unityInstance2;
+						getFlashMovieObject('foreground2').style.display = 'none';
+	getFlashMovieObject('imageContainer').style.display = 'none';
+/*
+		loadingBar.style.display = "none";        
+		fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };*/
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+  
+  
+  	
+	
+	function ResumeAudioContext() {
+		audioContext.resume();
+		if (audioContext.state == "running" && unitystarted == "true") {
+			console.log("WaitForAudioContext=" +audioContext.state); //suspended
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','audioContextStarted');
+			return;
+		}
+		setTimeout(ResumeAudioContext, 1000);
+	}
+	
+	function WaitForAudioContext(){
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		audioContext = new AudioContext();
+		console.log(audioContext.state); //suspended
+		audioContext.resume();
+		setTimeout(ResumeAudioContext, 1000);
+	}
+	
+	
+
+	WaitForAudioContext();
+
+function CopyToClipboard(arg){
+      var tempInput = document.createElement("input");
+      tempInput.value = arg;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput); 
+      }
+	  
+	  function CopyFromClipboard(){
+	  //console.log("triggered javascript CopyFromClipboard");
+	 
+	 
+		
+		if (navigator.userAgent.indexOf("Firefox") !== -1 || navigator.userAgent.indexOf("Trident") !== -1 	 	){
+	//unsupported
+	//https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/read
+	
+	 } else {
+	 	///CHROME OK
+		navigator.permissions.query({name:'clipboard-read'}); //
+
+		navigator.clipboard.readText().then(    result => {
+		var contain = Promise.resolve(result);
+		unityInstance.SendMessage('ParamsFromOutside','JavascriptParam', result);
+		unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','Paste');
+			   }  );
+	 }
+	 
+		
+  
+	}
+
+	function SentToJavaScript(str) {
+		if (str =="unityready") {
+
+
+		getFlashMovieObject('unityContainer').style.display = 'block';
+
+			var phpcookie = "d4f0825b80f2d211643d3333b5340673";
+			unityInstance.SendMessage('ParamsFromOutside','SetCookie',phpcookie);
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptParam', navigator.userAgent);
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','userAgent');
+			unitystarted = "true";
+		
+		var game = window.location.href.substring(8,window.location.href.indexOf('.'));
+			//alert(game);
+			
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptParam','https://era.graalonline.com/game/Assets.zip');
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','assets');
+			
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptParam', game);
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','URL');
+			
+			var phpipaddress = "131.72.36.136";
+			//alert(phpipadress);
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptParam', phpipaddress);
+			unityInstance.SendMessage('ParamsFromOutside','JavascriptEvent','IpAddress');
+		}
+		
+		if (str =="quattroready") {
+					
+
+		}
+		
+		if (str.startsWith("javascript:")) {
+			var jscommand = str.slice(11);
+			try {
+			
+			
+			
+				eval(jscommand);
+			} catch (e) {
+		
+			}
+		}
+	}
+    </script>
+	
+	
+  
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8d1b0c824bfedf56","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2024.10.1","token":"6b0b735e8e054a9db7092aefa291ee82"}' crossorigin="anonymous"></script>
+</body>
+  
+</html>
+<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fgraalonlineera&amp;width=760&amp;height=300&amp;colorscheme=light&amp;show_faces=false&amp;border_color=black&amp;stream=true&amp;header=false&amp;appId=180764748632828" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:760px; height:300px; top:22px; position:relative;" allowTransparency="true"></iframe>
+
+  </body>
+</html>
