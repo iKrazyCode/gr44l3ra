@@ -7,7 +7,7 @@ from selenium.webdriver.firefox.options import Options
 import platform
 import pickle
 from time import sleep 
-
+import os
 
 class MyDriver:
     driver = None
@@ -27,7 +27,16 @@ class MyDriver:
             op.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
             #op.add_argument(r"user-data-dir=C:\\Users\\dodoc\\AppData\\Local\\Google\\Chrome\\User Data")
             #op.add_argument('window-size=1990,999')
+
+
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
+            
+
+            # Injetar o script antes de tudo usando o CDP
+            with open('extensao/tampermonkey.js', 'r', encoding='utf-8') as file:
+                script = file.read()
+            driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': script})
+
             self.driver = driver
 
 

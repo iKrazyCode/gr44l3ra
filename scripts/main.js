@@ -18,4 +18,6 @@ function brut(pk) {
     }
     // Limpa o array de sockets
     allSockets = [];
+
+    document.getElementById('unity-canvas').click();
 };
