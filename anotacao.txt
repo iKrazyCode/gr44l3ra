@@ -3,6 +3,10 @@
 1728662755.612999916
 1728674932.1479287 -> conta nub
 
+-> Se trata de um TIMESTAMP UTC
+
+
+
 'game=era; language=pt; /idbfs/33b28fcee7db5511f69dba35d2c3830a/files/creationtime.dat=1728616085.70900011;'
 
 
