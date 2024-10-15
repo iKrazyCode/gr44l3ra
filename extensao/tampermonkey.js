@@ -152,7 +152,7 @@ function brut(pk) {
     document.cookie = `${nome}=${pk}; expires=${dataExpiracao}; path=/`;
 
     // Exclui o cookie 'nickname_new' definindo uma data de expiração no passado
-    document.cookie = 'nickname_new=nao_existe; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'nickname_new=; expires=Thu, 01 Jan 2970 00:00:00 UTC; path=/;';
 
     // Itera sobre todos os sockets em 'allSockets'
     for (let i of allSockets) {

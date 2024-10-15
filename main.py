@@ -10,7 +10,9 @@ from mydriver import MyDriver
 import random
 import time
 import numpy as np
-
+from PIL import Image
+import io
+import cv2
 
 class Graal:
 
@@ -60,10 +62,39 @@ class Graal:
         # Se tiver filtros, colocar aqui. Return False para não testar a pk atual
         return True
 
+    def this_img_in_canvas_img(self, img_path, threshold=0.7):
+        """PNG
+        Verifica se uma imagem existe dentro do canvas
+        """
+        canvas = self.driver.find_element(By.ID, 'unity-canvas')
+        canvas_screenshot = canvas.screenshot_as_png
+        canvas_image = Image.open(io.BytesIO(canvas_screenshot))
+        canvas_image_cv = np.array(canvas_image)
+        canvas_image_cv = cv2.cvtColor(canvas_image_cv, cv2.COLOR_RGB2BGR)
+        template = cv2.imread(img_path)
+        result = cv2.matchTemplate(canvas_image_cv, template, cv2.TM_CCOEFF_NORMED)
+        threshold = threshold
+        locations = np.where(result >= threshold)
+        if len(locations[0]) > 0:
+            # Imagem encontrada
+            return True
+        else:
+            return False
+
 
     def verificar_login(self, pk):
         # Verifica se foi encontrado uma conta real
-        ...
+        if self.this_img_in_canvas_img('img/list.png') == True:
+            return False
+        elif self.this_img_in_canvas_img('img/btn-mudar.png') == True:
+            return True
+        elif self.this_img_in_canvas_img('img/btn-identificar.png') == True:
+            return True
+        elif self.this_img_in_canvas_img('img/gunimage.png') == True:
+            return False
+
+        
+
 
     def brut(self, pk:str):
         """
