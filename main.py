@@ -65,21 +65,24 @@ class Graal:
     def this_img_in_canvas_img(self, img_path, threshold=0.8):
         """PNG
         Verifica se uma imagem existe dentro do canvas
+        threshold 1 para list
+        threshold 0.8 para identificar
+        
         """
 
         template = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
         if template.shape[2] == 4:
             template = template[:, :, :3]
 
-        canvas = self.driver.find_element(By.ID, 'unity-canvas')
-        canvas_screenshot = canvas.screenshot_as_png
+        canvas_screenshot = self.driver.get_screenshot_as_png()
+        #canvas = self.driver.find_element(By.ID, 'unity-canvas')
+        #canvas_screenshot = canvas.screenshot_as_png
         canvas_image = Image.open(io.BytesIO(canvas_screenshot))
         canvas_image_cv = np.array(canvas_image)
-
         if canvas_image_cv.shape[2] == 4:
             canvas_image_cv = canvas_image_cv[:, :, :3]
         canvas_image_cv = cv2.cvtColor(canvas_image_cv, cv2.COLOR_RGB2BGR)
-        
+         
 
         result = cv2.matchTemplate(canvas_image_cv, template, method=cv2.TM_CCOEFF_NORMED)
         threshold = threshold
