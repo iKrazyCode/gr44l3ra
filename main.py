@@ -62,17 +62,26 @@ class Graal:
         # Se tiver filtros, colocar aqui. Return False para não testar a pk atual
         return True
 
-    def this_img_in_canvas_img(self, img_path, threshold=0.7):
+    def this_img_in_canvas_img(self, img_path, threshold=0.8):
         """PNG
         Verifica se uma imagem existe dentro do canvas
         """
+
+        template = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
+        if template.shape[2] == 4:
+            template = template[:, :, :3]
+
         canvas = self.driver.find_element(By.ID, 'unity-canvas')
         canvas_screenshot = canvas.screenshot_as_png
         canvas_image = Image.open(io.BytesIO(canvas_screenshot))
         canvas_image_cv = np.array(canvas_image)
+
+        if canvas_image_cv.shape[2] == 4:
+            canvas_image_cv = canvas_image_cv[:, :, :3]
         canvas_image_cv = cv2.cvtColor(canvas_image_cv, cv2.COLOR_RGB2BGR)
-        template = cv2.imread(img_path)
-        result = cv2.matchTemplate(canvas_image_cv, template, cv2.TM_CCOEFF_NORMED)
+        
+
+        result = cv2.matchTemplate(canvas_image_cv, template, method=cv2.TM_CCOEFF_NORMED)
         threshold = threshold
         locations = np.where(result >= threshold)
         if len(locations[0]) > 0:
@@ -84,14 +93,22 @@ class Graal:
 
     def verificar_login(self, pk):
         # Verifica se foi encontrado uma conta real
-        if self.this_img_in_canvas_img('img/list.png') == True:
-            return False
-        elif self.this_img_in_canvas_img('img/btn-mudar.png') == True:
-            return True
-        elif self.this_img_in_canvas_img('img/btn-identificar.png') == True:
-            return True
-        elif self.this_img_in_canvas_img('img/gunimage.png') == True:
-            return False
+        # Ficará no loop até encontrar ou tela start ou logada
+        while True:
+            if self.this_img_in_canvas_img('img/list.png') == True:
+                print('list')
+                return False
+            elif self.this_img_in_canvas_img('img/btn-mudar.png') == True:
+                print('btn-mudar')
+                return True
+            elif self.this_img_in_canvas_img('img/btn-identificar.png') == True:
+                print('btn-identificar')
+                return True
+            elif self.this_img_in_canvas_img('img/gunimage.png') == True:
+                print('gunimage')
+                return False
+            
+
 
         
 
@@ -128,6 +145,8 @@ class Graal:
 
 
 graal = Graal()
+graal.abrir_jogo()
+
 graal.run()
 
 print('debug')
